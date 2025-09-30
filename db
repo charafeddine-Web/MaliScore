@@ -1,0 +1,70 @@
+CREATE DATABASE credit_scoring_db ;
+USE credit_scoring_db;
+
+-- Table Personne (classe abstraite représentée ici comme table parent)
+
+CREATE TABLE personne (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    date_naissance DATE NOT NULL,
+    ville VARCHAR(100),
+    nombre_enfants INT DEFAULT 0,
+    investissement boll DEFAULT false,
+    placement DOUBLE DEFAULT 0,
+    situation_familiale VARCHAR(50),
+    created_at DATE NOT NULL,
+    score DOUBLE DEFAULT 0,
+    type_personne ENUM('EMPLOYE', 'PROFESSIONNEL') NOT NULL
+);
+
+CREATE TABLE employe (
+    id BIGINT PRIMARY KEY,
+    salaire DOUBLE NOT NULL,
+    anciennete INT,
+    poste VARCHAR(100),
+    type_contrat ENUM('CDI', 'CDD', 'STAGE') NOT NULL,
+    secteur ENUM('PUBLIC', 'GRANDE_ENTREPRISE', 'PME') NOT NULL,
+    FOREIGN KEY (id) REFERENCES personne(id) ON DELETE CASCADE
+);
+
+CREATE TABLE professionnel (
+    id BIGINT PRIMARY KEY,
+    revenu DOUBLE NOT NULL,
+    immatriculation_fiscale VARCHAR(50) NOT NULL,
+    secteur_activite VARCHAR(100) NOT NULL,
+    activite VARCHAR(100),
+    FOREIGN KEY (id) REFERENCES personne(id) ON DELETE CASCADE
+);
+
+CREATE TABLE credit (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    personne_id BIGINT NOT NULL,
+    date_credit DATE NOT NULL,
+    montant_demande DOUBLE NOT NULL,
+    montant_octroye DOUBLE,
+    taux_interet DOUBLE,
+    duree_en_mois INT,
+    type_credit ENUM('CONSO', 'IMMO', 'AUTO', 'PERSO') NOT NULL,
+    decision ENUM('ACCORD_IMMEDIAT', 'ETUDE_MANUELLE', 'REFUS_AUTOMATIQUE'),
+    FOREIGN KEY (personne_id) REFERENCES personne(id) ON DELETE CASCADE
+);
+
+CREATE TABLE echeance (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    credit_id BIGINT NOT NULL,
+    date_echeance DATE NOT NULL,
+    mensualite DOUBLE NOT NULL,
+    date_paiement DATE,
+    statut ENUM('PAYE_A_TEMPS', 'EN_RETARD', 'PAYE_EN_RETARD', 'IMPAYE_NON_REGLE', 'IMPAYE_REGLE'),
+    FOREIGN KEY (credit_id) REFERENCES credit(id) ON DELETE CASCADE
+);
+
+CREATE TABLE incident (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    echeance_id BIGINT NOT NULL,
+    date_incident DATE NOT NULL,
+    type_incident ENUM('PAYE_A_TEMPS', 'EN_RETARD', 'PAYE_EN_RETARD', 'IMPAYE_NON_REGLE', 'IMPAYE_REGLE') NOT NULL,
+    score_impact INT,
+    FOREIGN KEY (echeance_id) REFERENCES echeance(id) ON DELETE CASCADE
+);

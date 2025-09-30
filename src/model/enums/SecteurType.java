@@ -1,4 +1,5 @@
 package model.enums;
 
-public class SecteurType {
+public enum SecteurType {
+    PUBLIC, GRANDE_ENTREPRISE, PME
 }

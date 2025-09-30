@@ -1,5 +1,5 @@
 package model.enums;
 
-public class ContratType {
-
+public enum ContratType {
+    CDI, CDD, STAGE
 }
