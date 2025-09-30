@@ -1,4 +1,10 @@
 package model.enums;
 
-public class StatutPaiement {
+public enum StatutPaiement {
+    PAYEATEMPS,
+    ENRETARD,
+    PAYEENRETARD,
+    IMPAYENONREGLE,
+    IMPAYEREGLE
 }
+

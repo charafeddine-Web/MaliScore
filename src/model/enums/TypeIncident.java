@@ -1,4 +1,9 @@
 package model.enums;
 
-public class TypeIncident {
+public enum TypeIncident {
+    PAYEATEMPS,
+    ENRETARD,
+    PAYEENRETARD,
+    IMPAYENONREGLE,
+    IMPAYEREGLE
 }
