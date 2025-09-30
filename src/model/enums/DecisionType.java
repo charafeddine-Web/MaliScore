@@ -1,4 +1,7 @@
 package model.enums;
 
-public class DecisionType {
+public enum DecisionType {
+    ACCORD_IMMEDIAT,
+    ETUDE_MANUELLE,
+    REFUS_AUTOMATIQUE
 }

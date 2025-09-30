@@ -1,4 +1,9 @@
 package model.enums;
 
-public class CreditType {
+public enum CreditType {
+    IMMOBILIER,
+    CONSOMMATION,
+    AUTO,
+    PERSONNEL
 }
+
