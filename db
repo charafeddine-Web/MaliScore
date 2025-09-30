@@ -1,5 +1,5 @@
-CREATE DATABASE credit_scoring_db ;
-USE credit_scoring_db;
+CREATE DATABASE credit_scoring;
+USE credit_scoring;
 
 -- Table Personne (classe abstraite représentée ici comme table parent)
 
