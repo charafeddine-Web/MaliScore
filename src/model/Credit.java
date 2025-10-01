@@ -19,6 +19,7 @@ public class Credit {
     private DecisionType decision;
     private List<Echeance> echeances;
 
+    public Credit(){};
     public Credit(Long id, LocalDate dateCredit, double montantDemande, double montantOctroye,
                   double tauxInteret, int dureeEnMois, CreditType typeCredit, DecisionType decision) {
         this.id = id;

@@ -1,9 +1,4 @@
-import repository.DatabaseConnection;
-import resources.ConfigDB;
 import ui.MenuClient;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 public class Main {
 
@@ -12,7 +7,7 @@ public class Main {
             new MenuClient().start();
 
         } catch (Exception e) {
-            System.out.println("erooooor");
+            System.out.println("Errour" + e);
             e.printStackTrace();
         }
     }
