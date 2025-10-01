@@ -10,7 +10,7 @@ public class Professionnel extends Personne {
 
     public Professionnel() {}
     public Professionnel(Long id, String nom, String prenom, java.time.LocalDate dateNaissance, String ville,
-                         int nombreEnfants, boolean investissement, double placement, String situationFamiliale,
+                         int nombreEnfants, boolean investissement, boolean placement, String situationFamiliale,
                          java.time.LocalDateTime createdAt, double score, double revenu,
                          String immatriculationFiscale, String secteurActivite, String activite) {
 

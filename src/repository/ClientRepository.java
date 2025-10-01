@@ -24,7 +24,7 @@ public class ClientRepository {
 
 
     public void save(Personne p){
-        String sql = "INSERT INTO personnes (type_personne, nom, prenom, date_naissance, ville, nombre_enfants, investissement, placement, situation_familiale, created_at, score) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO personne (type_personne, nom, prenom, date_naissance, ville, nombre_enfants, investissement, placement, situation_familiale, created_at, score) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         try(PreparedStatement stmt= conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
 
             stmt.setString(1,p instanceof Employe ? "EMPLOYE" : "PROFESSIONNEL");
@@ -34,9 +34,13 @@ public class ClientRepository {
             stmt.setString(5, p.getVille());
             stmt.setInt(6, p.getNombreEnfants());
             stmt.setBoolean(7, p.getInvestissement());
-            stmt.setDouble(8, p.getPlacement());
+            stmt.setBoolean(8, p.getPlacement());
             stmt.setString(9, p.getSituationFamiliale());
+            if (p.getCreatedAt() == null) {
+                p.setCreatedAt(java.time.LocalDateTime.now());
+            }
             stmt.setTimestamp(10, Timestamp.valueOf(p.getCreatedAt()));
+
             stmt.setDouble(11, p.getScore());
             stmt.executeUpdate();
 
@@ -81,7 +85,7 @@ public class ClientRepository {
     }
 
     public Personne findById(int id){
-        String sql = "SELECT * FROM perssones WHERE id = ?";
+        String sql = "SELECT * FROM personne WHERE id = ?";
         try(PreparedStatement stmt=conn.prepareStatement(sql)){
             stmt.setInt(1,id);
             ResultSet rs = stmt.executeQuery();
@@ -98,7 +102,7 @@ public class ClientRepository {
                     e.setVille(rs.getString("ville"));
                     e.setNombreEnfants(rs.getInt("nombre_enfants"));
                     e.setInvestissement(rs.getBoolean("investissement"));
-                    e.setPlacement(rs.getDouble("placement"));
+                    e.setPlacement(rs.getBoolean("placement"));
                     e.setSituationFamiliale(rs.getString("situation_familiale"));
                     e.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                     e.setScore(rs.getDouble("score"));
@@ -126,7 +130,7 @@ public class ClientRepository {
                     p.setVille(rs.getString("ville"));
                     p.setNombreEnfants(rs.getInt("nombre_enfants"));
                     p.setInvestissement(rs.getBoolean("investissement"));
-                    p.setPlacement(rs.getDouble("placement"));
+                    p.setPlacement(rs.getBoolean("placement"));
                     p.setSituationFamiliale(rs.getString("situation_familiale"));
                     p.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
                     p.setScore(rs.getDouble("score"));
@@ -170,7 +174,7 @@ public class ClientRepository {
                     e.setVille(res.getString("ville"));
                     e.setNombreEnfants(res.getInt("nombre_enfants"));
                     e.setInvestissement(res.getBoolean("investissement"));
-                    e.setPlacement(res.getDouble("placement"));
+                    e.setPlacement(res.getBoolean("placement"));
                     e.setSituationFamiliale(res.getString("situation_familiale"));
                     e.setScore(res.getDouble("score"));
 
@@ -198,7 +202,7 @@ public class ClientRepository {
                     p.setVille(res.getString("ville"));
                     p.setNombreEnfants(res.getInt("nombre_enfants"));
                     p.setInvestissement(res.getBoolean("investissement"));
-                    p.setPlacement(res.getDouble("placement"));
+                    p.setPlacement(res.getBoolean("placement"));
                     p.setSituationFamiliale(res.getString("situation_familiale"));
                     p.setScore(res.getDouble("score"));
 
@@ -223,7 +227,68 @@ public class ClientRepository {
         return clients;
     }
 
+    public void update(Personne p){
+        String sql = "UPDATE personne SET nom=?, prenom=?, date_naissance=?, ville=?, nombre_enfants=?, "
+                + "investissement=?, placement=?, situation_familiale=?, score=? WHERE id=?";
 
+        try(PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, p.getNom());
+            stmt.setString(2, p.getPrenom());
+            stmt.setDate(3, Date.valueOf(p.getDateNaissance()));
+            stmt.setString(4, p.getVille());
+            stmt.setInt(5, p.getNombreEnfants());
+            stmt.setBoolean(6, p.getInvestissement());
+            stmt.setBoolean(7, p.getPlacement());
+            stmt.setString(8, p.getSituationFamiliale());
+            stmt.setDouble(9, p.getScore());
+            stmt.setLong(10, p.getId());
+
+            stmt.executeUpdate();
+
+            if(p instanceof Employe){
+                Employe e = (Employe) p;
+                String sqlEmp = "UPDATE employe SET salaire=?, anciennete=?, poste=?, type_contrat=?, secteur=? WHERE id=?";
+                try (PreparedStatement stmtEmp = conn.prepareStatement(sqlEmp)) {
+                    stmtEmp.setDouble(1, e.getSalaire());
+                    stmtEmp.setInt(2, e.getAnciennete());
+                    stmtEmp.setString(3, e.getPoste());
+                    stmtEmp.setString(4, e.getTypeContrat().name());
+                    stmtEmp.setString(5, e.getSecteur().name());
+                    stmtEmp.setLong(6, e.getId());
+                    stmtEmp.executeUpdate();
+                }
+            }else if(p instanceof  Professionnel){
+                Professionnel pr = (Professionnel) p;
+                String sqlProf = "UPDATE professionnel SET revenu=?, immatriculation_fiscale=?, secteur_activite=?, activite=? WHERE id=?";
+                try (PreparedStatement stmtProf = conn.prepareStatement(sqlProf)) {
+                    stmtProf.setDouble(1, pr.getRevenu());
+                    stmtProf.setString(2, pr.getImmatriculationFiscale());
+                    stmtProf.setString(3, pr.getSecteurActivite());
+                    stmtProf.setString(4, pr.getActivite());
+                    stmtProf.setLong(5, pr.getId());
+                    stmtProf.executeUpdate();
+                }
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void delete(int id){
+        String sql = "DELETE FROM personne WHERE id=?";
+
+        try(PreparedStatement stmt= conn.prepareStatement(sql)){
+            stmt.setInt(1,id);
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Client supprimé avec succès !");
+            } else {
+                System.out.println("Aucun client trouvé avec cet ID.");
+            }        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
 
 
 

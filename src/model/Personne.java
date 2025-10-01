@@ -12,7 +12,7 @@ public abstract class Personne {
     private String ville;
     private int nombreEnfants;
     private boolean investissement;
-    private double placement;
+    private boolean placement;
     private String situationFamiliale;
     private LocalDateTime createdAt;
     private double score;
@@ -21,7 +21,7 @@ public abstract class Personne {
     public Personne() {}
 
     public Personne(Long id, String nom, String prenom, LocalDate dateNaissance, String ville,
-                    int nombreEnfants, boolean investissement, double placement,
+                    int nombreEnfants, boolean investissement, boolean placement,
                     String situationFamiliale, LocalDateTime createdAt, double score, TypePersonne typePersonne) {
         this.id = id;
         this.nom = nom;
@@ -62,8 +62,8 @@ public abstract class Personne {
     public boolean getInvestissement() { return investissement; }
     public void setInvestissement(boolean investissement) { this.investissement = investissement; }
 
-    public double getPlacement() { return placement; }
-    public void setPlacement(double placement) { this.placement = placement; }
+    public boolean getPlacement() { return placement; }
+    public void setPlacement(boolean placement) { this.placement = placement; }
 
     public String getSituationFamiliale() { return situationFamiliale; }
     public void setSituationFamiliale(String situationFamiliale) { this.situationFamiliale = situationFamiliale; }

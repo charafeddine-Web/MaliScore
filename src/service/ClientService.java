@@ -25,4 +25,13 @@ public class ClientService {
         return clientRepository.findAll();
     }
 
+    public void update(Personne pr){
+         clientRepository.update(pr);
+    }
+
+    public void deleteClient(int id) {
+        clientRepository.delete(id);
+    }
+
+
 }

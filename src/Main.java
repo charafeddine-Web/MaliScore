@@ -1,5 +1,6 @@
 import repository.DatabaseConnection;
 import resources.ConfigDB;
+import ui.MenuClient;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -8,18 +9,9 @@ public class Main {
 
     public static void main(String[] args){
         try {
-            ConfigDB configDB=new ConfigDB();
-            DatabaseConnection db =  DatabaseConnection.getInstance(configDB);
-            Connection conn=db.getConnection();
+            new MenuClient().start();
 
-            if (conn != null) {
-                System.out.println("Connecté !!!");
-            } else {
-                System.out.println("Échec de connexion !!!");
-            }
-
-        } catch ( SQLException | ClassNotFoundException e) {
-
+        } catch (Exception e) {
             System.out.println("erooooor");
             e.printStackTrace();
         }

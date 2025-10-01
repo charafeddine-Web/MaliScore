@@ -10,7 +10,7 @@ public class Employe extends Personne {
 
     public Employe() {}
     public Employe(Long id, String nom, String prenom, java.time.LocalDate dateNaissance, String ville,
-                   int nombreEnfants, boolean investissement, double placement, String situationFamiliale,
+                   int nombreEnfants, boolean investissement, boolean placement, String situationFamiliale,
                    java.time.LocalDateTime createdAt, double score, double salaire, int anciennete,
                    String poste, ContratType typeContrat, SecteurType secteur) {
 
