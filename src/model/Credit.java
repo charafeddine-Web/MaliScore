@@ -15,14 +15,16 @@ public class Credit {
     private double montantOctroye;
     private double tauxInteret;
     private int dureeEnMois;
+    private Long personne_id;
+
     private CreditType typeCredit;
     private DecisionType decision;
     private List<Echeance> echeances;
 
     public Credit(){};
-    public Credit(Long id, LocalDate dateCredit, double montantDemande, double montantOctroye,
+    public Credit(Long personne_id, LocalDate dateCredit, double montantDemande, double montantOctroye,
                   double tauxInteret, int dureeEnMois, CreditType typeCredit, DecisionType decision) {
-        this.id = id;
+        this.personne_id = personne_id;
         this.dateCredit = dateCredit;
         this.montantDemande = montantDemande;
         this.montantOctroye = montantOctroye;
@@ -36,6 +38,13 @@ public class Credit {
     // Getters et Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public Long getPersonneId() {
+        return personne_id;
+    }
+    public void setPersonneId(Long personne_id) {
+        this.personne_id = personne_id;
+    }
 
     public LocalDate getDateCredit() { return dateCredit; }
     public void setDateCredit(LocalDate dateCredit) { this.dateCredit = dateCredit; }
@@ -64,16 +73,18 @@ public class Credit {
 
     @Override
     public String toString() {
-        return "Credit{" +
+        return "Credit {" +
                 "id=" + id +
+                ", personneId=" + personne_id +
                 ", dateCredit=" + dateCredit +
                 ", montantDemande=" + montantDemande +
                 ", montantOctroye=" + montantOctroye +
                 ", tauxInteret=" + tauxInteret +
                 ", dureeEnMois=" + dureeEnMois +
-                ", typeCredit=" + typeCredit +
-                ", decision=" + decision +
-                ", echeances=" + echeances.size() +
+                ", typeCredit=" + (typeCredit != null ? typeCredit : "N/A") +
+                ", decision=" + (decision != null ? decision : "N/A") +
+                ", echeances=" + (echeances != null ? echeances.size() : 0) +
                 '}';
     }
+
 }

@@ -1,6 +1,7 @@
 package repository;
 
 import model.Credit;
+import model.enums.CreditType;
 import resources.ConfigDB;
 
 import java.sql.*;
@@ -22,7 +23,7 @@ public class CreditRepository {
         String sql = "INSERT INTO credit (personne_id, date_credit, montant_demande, montant_octroye, taux_interet, duree_en_mois, type_credit, decision) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setLong(1, c.getId());
+            stmt.setLong(1, c.getPersonneId());
             stmt.setDate(2, Date.valueOf(c.getDateCredit()));
             stmt.setDouble(3, c.getMontantDemande());
             stmt.setDouble(4, c.getMontantOctroye());
@@ -47,13 +48,16 @@ public class CreditRepository {
             if (rs.next()) {
                 Credit c = new Credit();
                 c.setId(rs.getLong("id"));
-                c.setId(rs.getLong("personne_id"));
+                c.setPersonneId(rs.getLong("personne_id"));
                 c.setDateCredit(rs.getDate("date_credit").toLocalDate());
                 c.setMontantDemande(rs.getDouble("montant_demande"));
                 c.setMontantOctroye(rs.getDouble("montant_octroye"));
                 c.setTauxInteret(rs.getDouble("taux_interet"));
                 c.setDureeEnMois(rs.getInt("duree_en_mois"));
-                c.setTypeCredit(model.enums.CreditType.valueOf(rs.getString("type_credit")));
+                String type = rs.getString("type_credit");
+                if (type != null) {
+                    c.setTypeCredit(CreditType.valueOf(type));
+                }
                 String decision = rs.getString("decision");
                 if (decision != null) {
                     c.setDecision(model.enums.DecisionType.valueOf(decision));
@@ -77,7 +81,7 @@ public class CreditRepository {
             while (rs.next()) {
                 Credit c = new Credit();
                 c.setId(rs.getLong("id"));
-                c.setId(rs.getLong("personne_id"));
+                c.setPersonneId(rs.getLong("personne_id"));
                 c.setDateCredit(rs.getDate("date_credit").toLocalDate());
                 c.setMontantDemande(rs.getDouble("montant_demande"));
                 c.setMontantOctroye(rs.getDouble("montant_octroye"));
