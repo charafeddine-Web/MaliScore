@@ -8,9 +8,10 @@ public class Professionnel extends Personne {
     private String secteurActivite;
     private String activite;
 
+    public Professionnel() {}
     public Professionnel(Long id, String nom, String prenom, java.time.LocalDate dateNaissance, String ville,
-                         int nombreEnfants, double investissement, double placement, String situationFamiliale,
-                         java.time.LocalDate createdAt, double score, double revenu,
+                         int nombreEnfants, boolean investissement, double placement, String situationFamiliale,
+                         java.time.LocalDateTime createdAt, double score, double revenu,
                          String immatriculationFiscale, String secteurActivite, String activite) {
 
         super(id, nom, prenom, dateNaissance, ville, nombreEnfants, investissement,

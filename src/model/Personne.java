@@ -1,5 +1,7 @@
 package model;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import model.enums.TypePersonne;
 
 public abstract class Personne {
@@ -9,16 +11,18 @@ public abstract class Personne {
     private LocalDate dateNaissance;
     private String ville;
     private int nombreEnfants;
-    private double investissement;
+    private boolean investissement;
     private double placement;
     private String situationFamiliale;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     private double score;
     private TypePersonne typePersonne;
 
+    public Personne() {}
+
     public Personne(Long id, String nom, String prenom, LocalDate dateNaissance, String ville,
-                    int nombreEnfants, double investissement, double placement,
-                    String situationFamiliale, LocalDate createdAt, double score, TypePersonne typePersonne) {
+                    int nombreEnfants, boolean investissement, double placement,
+                    String situationFamiliale, LocalDateTime createdAt, double score, TypePersonne typePersonne) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -55,8 +59,8 @@ public abstract class Personne {
     public int getNombreEnfants() { return nombreEnfants; }
     public void setNombreEnfants(int nombreEnfants) { this.nombreEnfants = nombreEnfants; }
 
-    public double getInvestissement() { return investissement; }
-    public void setInvestissement(double investissement) { this.investissement = investissement; }
+    public boolean getInvestissement() { return investissement; }
+    public void setInvestissement(boolean investissement) { this.investissement = investissement; }
 
     public double getPlacement() { return placement; }
     public void setPlacement(double placement) { this.placement = placement; }
@@ -64,8 +68,8 @@ public abstract class Personne {
     public String getSituationFamiliale() { return situationFamiliale; }
     public void setSituationFamiliale(String situationFamiliale) { this.situationFamiliale = situationFamiliale; }
 
-    public LocalDate getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDate createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     public double getScore() { return score; }
     public void setScore(double score) { this.score = score; }

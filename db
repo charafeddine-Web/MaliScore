@@ -10,7 +10,7 @@ CREATE TABLE personne (
     date_naissance DATE NOT NULL,
     ville VARCHAR(100),
     nombre_enfants INT DEFAULT 0,
-    investissement boll DEFAULT false,
+    investissement BOOLEAN  DEFAULT false,
     placement DOUBLE DEFAULT 0,
     situation_familiale VARCHAR(50),
     created_at DATE NOT NULL,

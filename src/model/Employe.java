@@ -8,9 +8,10 @@ public class Employe extends Personne {
     private ContratType typeContrat;
     private SecteurType secteur;
 
+    public Employe() {}
     public Employe(Long id, String nom, String prenom, java.time.LocalDate dateNaissance, String ville,
-                   int nombreEnfants, double investissement, double placement, String situationFamiliale,
-                   java.time.LocalDate createdAt, double score, double salaire, int anciennete,
+                   int nombreEnfants, boolean investissement, double placement, String situationFamiliale,
+                   java.time.LocalDateTime createdAt, double score, double salaire, int anciennete,
                    String poste, ContratType typeContrat, SecteurType secteur) {
 
         super(id, nom, prenom, dateNaissance, ville, nombreEnfants, investissement,
