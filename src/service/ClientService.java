@@ -88,7 +88,18 @@ public class ClientService {
     };
 
 
-    private double calculCapaciteFinanciere(Personne p){return 0;};
+    private double calculCapaciteFinanciere(Personne p){
+        double revenus=0;
+        if (p instanceof  Employe) revenus = ((Employe) p).getSalaire();
+        if(p instanceof  Professionnel) revenus = ((Professionnel) p).getRevenu();
+        if (revenus >= 10000) return 30;
+        else if (revenus >= 8000) return 25;
+        else if (revenus >= 5000) return 20;
+        else if (revenus >= 3000) return 15;
+        else return 10;
+    };
+
+
     private double calculHistorique(Personne p){return 0;};
     private double calculRelationClient(Personne p){return 0;};
     private double calculPatrimoine(Personne p){return 0;};
