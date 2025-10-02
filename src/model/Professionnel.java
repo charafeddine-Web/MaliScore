@@ -7,12 +7,13 @@ public class Professionnel extends Personne {
     private String immatriculationFiscale;
     private String secteurActivite;
     private String activite;
+    private boolean autoEntrepreneur;
 
     public Professionnel() {}
     public Professionnel(Long id, String nom, String prenom, java.time.LocalDate dateNaissance, String ville,
                          int nombreEnfants, boolean investissement, boolean placement, String situationFamiliale,
                          java.time.LocalDateTime createdAt, double score, double revenu,
-                         String immatriculationFiscale, String secteurActivite, String activite) {
+                         String immatriculationFiscale, String secteurActivite, String activite,boolean autoEntrepreneur) {
 
         super(id, nom, prenom, dateNaissance, ville, nombreEnfants, investissement,
                 placement, situationFamiliale, createdAt, score, TypePersonne.PROFESSIONNEL);
@@ -20,6 +21,7 @@ public class Professionnel extends Personne {
         this.immatriculationFiscale = immatriculationFiscale;
         this.secteurActivite = secteurActivite;
         this.activite = activite;
+        this.autoEntrepreneur =autoEntrepreneur;
     }
 
     // Getters et Setters
@@ -35,6 +37,13 @@ public class Professionnel extends Personne {
     public String getActivite() { return activite; }
     public void setActivite(String activite) { this.activite = activite; }
 
+
+    public boolean isAutoEntrepreneur() {
+        return autoEntrepreneur;
+    }
+    public void setAutoEntrepreneur(boolean autoEntrepreneur) {
+        this.autoEntrepreneur = autoEntrepreneur;
+    }
 
     @Override
     public String toString() {

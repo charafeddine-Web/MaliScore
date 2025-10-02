@@ -130,6 +130,9 @@ public class MenuClient {
             p.setSecteurActivite(scanner.nextLine());
             System.out.print("Activite (Avocat, Mecanicien,..) : ");
             p.setActivite(scanner.nextLine());
+            System.out.print("AutoEntrepreneur (True, False) : ");
+            p.setAutoEntrepreneur(scanner.nextBoolean());
+
 
             clientService.addClient(p);
         }else {
@@ -228,8 +231,6 @@ public class MenuClient {
             if (p instanceof Employe ) {
                 Employe e = (Employe) p;
 
-                System.out.println("---- Mise à jour Employé ----");
-
                 System.out.print("Nouveau salaire (" + e.getSalaire() + ") : ");
                 String salaireStr = scanner.nextLine();
                 if (!salaireStr.trim().isEmpty()) {
@@ -277,7 +278,6 @@ public class MenuClient {
             }else if (p instanceof Professionnel ) {
                 Professionnel pro = (Professionnel) p;
 
-                System.out.println("---- Mise à jour Professionnel ----");
 
                 System.out.print("Nouveau revenu (" + pro.getRevenu() + ") : ");
                 String revStr = scanner.nextLine();
@@ -300,6 +300,11 @@ public class MenuClient {
                 System.out.print("Nouvelle activité (" + pro.getActivite() + ") : ");
                 String act = scanner.nextLine();
                 if (!act.trim().isEmpty()) pro.setActivite(act);
+
+                System.out.print(" AutoEntrepreneur (" + pro.isAutoEntrepreneur() + ") : ");
+                boolean auto = scanner.nextBoolean();
+                if (auto) pro.setAutoEntrepreneur(auto);
+
             }
 
             clientService.update(p);

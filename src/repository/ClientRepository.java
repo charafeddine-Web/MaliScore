@@ -63,13 +63,14 @@ public class ClientRepository {
                 }
             } else if (p instanceof Professionnel) {
                 Professionnel prof = (Professionnel) p;
-                String sqlProf = "INSERT INTO professionnel (id, revenu, immatriculation_fiscale, secteur_activite, activite) VALUES (?,?,?,?,?)";
+                String sqlProf = "INSERT INTO professionnel (id, revenu, immatriculation_fiscale, secteur_activite, activite,autoEntrepreneur) VALUES (?,?,?,?,?,?)";
                 try (PreparedStatement stm = conn.prepareStatement(sqlProf)) {
                     stm.setLong(1, prof.getId());
                     stm.setDouble(2, prof.getRevenu());
                     stm.setString(3, prof.getImmatriculationFiscale());
                     stm.setString(4, prof.getSecteurActivite());
                     stm.setString(5, prof.getActivite());
+                    stm.setBoolean(6, prof.isAutoEntrepreneur());
                     stm.executeUpdate();
                 }
             }
@@ -144,6 +145,7 @@ public class ClientRepository {
                             p.setImmatriculationFiscale(rsProf.getString("immatriculation_fiscale"));
                             p.setSecteurActivite(rsProf.getString("secteur_activite"));
                             p.setActivite(rsProf.getString("activite"));
+                            p.setAutoEntrepreneur(rsProf.getBoolean("autoEntrepreneur"));
                         }
                     }
                     return p;
@@ -215,6 +217,8 @@ public class ClientRepository {
                             p.setImmatriculationFiscale(rsProf.getString("immatriculation_fiscale"));
                             p.setSecteurActivite(rsProf.getString("secteur_activite"));
                             p.setActivite(rsProf.getString("activite"));
+                            p.setAutoEntrepreneur(rsProf.getBoolean("autoEntrepreneur"));
+
                         }
                     }
                     clients.add(p);
@@ -259,13 +263,14 @@ public class ClientRepository {
                 }
             }else if(p instanceof  Professionnel){
                 Professionnel pr = (Professionnel) p;
-                String sqlProf = "UPDATE professionnel SET revenu=?, immatriculation_fiscale=?, secteur_activite=?, activite=? WHERE id=?";
+                String sqlProf = "UPDATE professionnel SET revenu=?, immatriculation_fiscale=?, secteur_activite=?, activite=? ,autoEntrepreneur =? WHERE id=?";
                 try (PreparedStatement stmtProf = conn.prepareStatement(sqlProf)) {
                     stmtProf.setDouble(1, pr.getRevenu());
                     stmtProf.setString(2, pr.getImmatriculationFiscale());
                     stmtProf.setString(3, pr.getSecteurActivite());
                     stmtProf.setString(4, pr.getActivite());
-                    stmtProf.setLong(5, pr.getId());
+                    stmtProf.setBoolean(5, pr.isAutoEntrepreneur());
+                    stmtProf.setLong(6, pr.getId());
                     stmtProf.executeUpdate();
                 }
             }

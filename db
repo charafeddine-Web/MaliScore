@@ -18,6 +18,15 @@ CREATE TABLE personne (
     type_personne ENUM('EMPLOYE', 'PROFESSIONNEL') NOT NULL
 );
 
+CREATE TABLE employe (
+    id BIGINT PRIMARY KEY,
+    salaire DOUBLE NOT NULL,
+    anciennete INT,
+    poste VARCHAR(100),
+    type_contrat ENUM('CDI_PUBLIC', 'CDI_PRIVEE_GRANDE', 'CDI_PME','CDD_INTERIM','PROFESSION_LIBERALE','AUTO_ENTREPRENEUR') NOT NULL,
+    secteur ENUM('PUBLIC', 'GRANDE_ENTREPRISE', 'PME') NOT NULL,
+    FOREIGN KEY (id) REFERENCES personne(id) ON DELETE CASCADE
+);
 
 CREATE TABLE professionnel (
     id BIGINT PRIMARY KEY,
@@ -25,6 +34,7 @@ CREATE TABLE professionnel (
     immatriculation_fiscale VARCHAR(50) NOT NULL,
     secteur_activite VARCHAR(100) NOT NULL,
     activite VARCHAR(100),
+    autoEntrepreneur BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (id) REFERENCES personne(id) ON DELETE CASCADE
 );
 
