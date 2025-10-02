@@ -1,4 +1,105 @@
 package repository;
 
+import model.Echeance;
+import model.Incident;
+import model.enums.TypeIncident;
+import resources.ConfigDB;
+
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 public class IncidentRepository {
+
+    private  Connection conn;
+
+    public IncidentRepository() {
+        try {
+            ConfigDB config = new ConfigDB();
+            this.conn = DatabaseConnection.getInstance(config).getConnection();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void save(Incident incident) {
+        String sql = "INSERT INTO incident (echeance_id, date_incident, type_incident, score_impact) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, incident.getEcheance().getId());
+            ps.setDate(2, Date.valueOf(incident.getDateIncident()));
+            ps.setString(3, incident.getTypeIncident().name());
+            ps.setInt(4, incident.getScoreImpact());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Incident findById(Long id) {
+        String sql = "SELECT * FROM incident WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapToIncident(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Incident> findAll() {
+        List<Incident> incidents = new ArrayList<>();
+        String sql = "SELECT * FROM incident";
+        try (Statement st = conn.createStatement()) {
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                incidents.add(mapToIncident(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return incidents;
+    }
+
+    public void update(Incident incident) {
+        String sql = "UPDATE incident SET echeance_id = ?, date_incident = ?, type_incident = ?, score_impact = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, incident.getEcheance().getId());
+            ps.setDate(2, Date.valueOf(incident.getDateIncident()));
+            ps.setString(3, incident.getTypeIncident().name());
+            ps.setInt(4, incident.getScoreImpact());
+            ps.setLong(5, incident.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(Long id) {
+        String sql = "DELETE FROM incident WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Incident mapToIncident(ResultSet rs) throws SQLException {
+        Incident incident = new Incident();
+        incident.setId(rs.getLong("id"));
+
+        Echeance echeance = new Echeance();
+        echeance.setId(rs.getLong("echeance_id"));
+        incident.setEcheance(echeance);
+
+        incident.setDateIncident(rs.getDate("date_incident").toLocalDate());
+        incident.setTypeIncident(TypeIncident.valueOf(rs.getString("type_incident")));
+        incident.setScoreImpact(rs.getInt("score_impact"));
+
+        return incident;
+    }
 }

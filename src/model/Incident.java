@@ -37,7 +37,6 @@ public class Incident {
     public TypeIncident getTypeIncident() { return typeIncident; }
     public void setTypeIncident(TypeIncident typeIncident) { this.typeIncident = typeIncident; }
 
-    // --- toString ---
     @Override
     public String toString() {
         return "Incident{" +
