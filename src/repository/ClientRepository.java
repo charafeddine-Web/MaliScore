@@ -290,7 +290,8 @@ public class ClientRepository {
                 System.out.println("Client supprimé avec succès !");
             } else {
                 System.out.println("Aucun client trouvé avec cet ID.");
-            }        }catch (SQLException e){
+            }
+        }catch (SQLException e){
             e.printStackTrace();
         }
     }

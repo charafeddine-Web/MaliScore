@@ -10,16 +10,18 @@ public class Echeance {
     private double mensualite;
     private LocalDate datePaiement;
     private StatutPaiement statutPaiement;
+    private Long creditId;
 
     public Echeance() {}
 
     public Echeance(Long id, LocalDate dateEcheance, double mensualite,
-                    LocalDate datePaiement, StatutPaiement statutPaiement) {
+                    LocalDate datePaiement, StatutPaiement statutPaiement,Long creditId) {
         this.id = id;
         this.dateEcheance = dateEcheance;
         this.mensualite = mensualite;
         this.datePaiement = datePaiement;
         this.statutPaiement = statutPaiement;
+        this.creditId = creditId;
     }
 
 
@@ -27,6 +29,15 @@ public class Echeance {
     public void setId(Long id) { this.id = id; }
 
     public LocalDate getDateEcheance() { return dateEcheance; }
+
+    public Long getCreditId() {
+        return creditId;
+    }
+
+    public void setCreditId(Long creditId) {
+        this.creditId = creditId;
+    }
+
     public void setDateEcheance(LocalDate dateEcheance) { this.dateEcheance = dateEcheance; }
 
     public double getMensualite() { return mensualite; }

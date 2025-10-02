@@ -57,7 +57,7 @@ CREATE TABLE echeance (
     date_echeance DATE NOT NULL,
     mensualite DOUBLE NOT NULL,
     date_paiement DATE,
-    statut ENUM('PAYE_A_TEMPS', 'EN_RETARD', 'PAYE_EN_RETARD', 'IMPAYE_NON_REGLE', 'IMPAYE_REGLE'),
+    statut_paiement ENUM('PAYE_A_TEMPS', 'EN_RETARD', 'PAYE_EN_RETARD', 'IMPAYE_NON_REGLE', 'IMPAYE_REGLE'),
     FOREIGN KEY (credit_id) REFERENCES credit(id) ON DELETE CASCADE
 );
 

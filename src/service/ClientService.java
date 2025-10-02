@@ -86,8 +86,6 @@ public class ClientService {
         return points;
 
     };
-
-
     private double calculCapaciteFinanciere(Personne p){
         double revenus=0;
         if (p instanceof  Employe) revenus = ((Employe) p).getSalaire();
@@ -100,7 +98,10 @@ public class ClientService {
     };
 
 
-    private double calculHistorique(Personne p){return 0;};
+    private double calculHistorique(Personne p){
+        double points=0;
+        return 0;
+    };
     private double calculRelationClient(Personne p){return 0;};
     private double calculPatrimoine(Personne p){return 0;};
 
