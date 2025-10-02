@@ -99,7 +99,9 @@ public class MenuClient {
             scanner.nextLine();
             System.out.print("Poste : ");
             e.setPoste(scanner.nextLine());
-            System.out.print("Type contrat (CDI, CDD, STAGE) : ");
+            System.out.print("Type contrat (CDI_PUBLIC, CDI_PRIVEE_GRANDE," +
+                    " CDI_PME, CDD_INTERIM, PROFESSION_LIBERALE, " +
+                    "AUTO_ENTREPRENEUR) : ");
             e.setTypeContrat(model.enums.ContratType.valueOf(scanner.nextLine().toUpperCase()));
             System.out.print("Secteur (PUBLIC, GRANDE_ENTREPRISE, PME) : ");
             e.setSecteur(model.enums.SecteurType.valueOf(scanner.nextLine().toUpperCase()));

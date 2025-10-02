@@ -11,7 +11,6 @@ public class Echeance {
     private LocalDate datePaiement;
     private StatutPaiement statutPaiement;
 
-    // --- Constructeurs ---
     public Echeance() {}
 
     public Echeance(Long id, LocalDate dateEcheance, double mensualite,
@@ -23,7 +22,6 @@ public class Echeance {
         this.statutPaiement = statutPaiement;
     }
 
-    // --- Getters & Setters ---
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

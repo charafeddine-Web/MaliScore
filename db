@@ -18,15 +18,6 @@ CREATE TABLE personne (
     type_personne ENUM('EMPLOYE', 'PROFESSIONNEL') NOT NULL
 );
 
-CREATE TABLE employe (
-    id BIGINT PRIMARY KEY,
-    salaire DOUBLE NOT NULL,
-    anciennete INT,
-    poste VARCHAR(100),
-    type_contrat ENUM('CDI', 'CDD', 'STAGE') NOT NULL,
-    secteur ENUM('PUBLIC', 'GRANDE_ENTREPRISE', 'PME') NOT NULL,
-    FOREIGN KEY (id) REFERENCES personne(id) ON DELETE CASCADE
-);
 
 CREATE TABLE professionnel (
     id BIGINT PRIMARY KEY,

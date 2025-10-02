@@ -70,7 +70,6 @@ public class CreditRepository {
         return null;
     }
 
-
     public List<Credit> findAll() {
 
         List<Credit> credits = new ArrayList<>();
@@ -110,7 +109,6 @@ public class CreditRepository {
             e.printStackTrace();
         }
     }
-
 
     public void update(Credit c) {
         String sql = "UPDATE credit SET montant_demande=?, montant_octroye=?, taux_interet=?, duree_en_mois=?, type_credit=?, decision=? WHERE id=?";
