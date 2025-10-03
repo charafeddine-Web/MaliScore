@@ -115,5 +115,29 @@ public class EcheanceRepository {
     }
 
 
+    public List<Echeance> findByCreditId(Long creditId) {
+        List<Echeance> list = new ArrayList<>();
+        String sql = "SELECT * FROM echeance WHERE credit_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, creditId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Echeance e = new Echeance();
+                e.setId(rs.getLong("id"));
+                e.setCreditId(rs.getLong("credit_id"));
+                e.setDateEcheance(rs.getDate("date_echeance").toLocalDate());
+                e.setMensualite(rs.getDouble("mensualite"));
+
+                Date dp = rs.getDate("date_paiement");
+                if (dp != null) e.setDatePaiement(dp.toLocalDate());
+
+                e.setStatutPaiement(model.enums.StatutPaiement.valueOf(rs.getString("statut_paiement")));
+                list.add(e);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
 
 }

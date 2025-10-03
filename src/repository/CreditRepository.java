@@ -2,6 +2,7 @@ package repository;
 
 import model.Credit;
 import model.enums.CreditType;
+import model.enums.DecisionType;
 import resources.ConfigDB;
 
 import java.sql.*;
@@ -127,4 +128,46 @@ public class CreditRepository {
             e.printStackTrace();
         }
     }
+
+
+    public List<Credit> findByPersonneId(Long personneId) {
+        List<Credit> credits = new ArrayList<>();
+        String sql = "SELECT * FROM credit WHERE personne_id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, personneId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Credit c = new Credit();
+                c.setId(rs.getLong("id"));
+                c.setDateCredit(rs.getDate("date_credit").toLocalDate());
+                c.setMontantDemande(rs.getDouble("montant_demande"));
+                c.setMontantOctroye(rs.getDouble("montant_octroye"));
+                c.setTauxInteret(rs.getDouble("taux_interet"));
+                c.setDureeEnMois(rs.getInt("duree_en_mois"));
+                c.setPersonneId(rs.getLong("personne_id"));
+
+                String typeStr = rs.getString("type_credit");
+                if (typeStr != null) {
+                    c.setTypeCredit(CreditType.valueOf(typeStr));
+                }
+
+                String decisionStr = rs.getString("decision");
+                if (decisionStr != null) {
+                    c.setDecision(DecisionType.valueOf(decisionStr));
+                }
+
+                c.setEcheances(new ArrayList<>());
+
+                credits.add(c);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return credits;
+    }
+
 }
