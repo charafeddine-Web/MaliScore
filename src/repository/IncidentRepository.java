@@ -23,18 +23,30 @@ public class IncidentRepository {
         }
     }
 
-    public void save(Incident incident) {
+    public boolean save(Incident incident) {
         String sql = "INSERT INTO incident (echeance_id, date_incident, type_incident, score_impact) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setLong(1, incident.getEcheance().getId());
             ps.setDate(2, Date.valueOf(incident.getDateIncident()));
             ps.setString(3, incident.getTypeIncident().name());
             ps.setInt(4, incident.getScoreImpact());
-            ps.executeUpdate();
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        incident.setId(rs.getLong(1));
+                    }
+                }
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
+
 
     public Incident findById(Long id) {
         String sql = "SELECT * FROM incident WHERE id = ?";
@@ -64,7 +76,7 @@ public class IncidentRepository {
         return incidents;
     }
 
-    public void update(Incident incident) {
+    public boolean update(Incident incident) {
         String sql = "UPDATE incident SET echeance_id = ?, date_incident = ?, type_incident = ?, score_impact = ? WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, incident.getEcheance().getId());
@@ -72,19 +84,23 @@ public class IncidentRepository {
             ps.setString(3, incident.getTypeIncident().name());
             ps.setInt(4, incident.getScoreImpact());
             ps.setLong(5, incident.getId());
-            ps.executeUpdate();
+            int rows = ps.executeUpdate();
+            return rows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         String sql = "DELETE FROM incident WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
-            ps.executeUpdate();
+            int rows = ps.executeUpdate();
+            return rows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 
