@@ -82,6 +82,7 @@ public class ScoringService {
         double points=0;
         return 0;
     };
+
     private double calculRelationClient(Personne p){return 0;};
     private double calculPatrimoine(Personne p){return 0;};
 

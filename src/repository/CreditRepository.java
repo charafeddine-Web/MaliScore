@@ -5,6 +5,7 @@ import model.enums.CreditType;
 import resources.ConfigDB;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class CreditRepository {
 
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) c.setId(rs.getLong(1));
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

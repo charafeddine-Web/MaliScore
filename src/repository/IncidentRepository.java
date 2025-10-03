@@ -47,7 +47,6 @@ public class IncidentRepository {
         return false;
     }
 
-
     public Incident findById(Long id) {
         String sql = "SELECT * FROM incident WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
