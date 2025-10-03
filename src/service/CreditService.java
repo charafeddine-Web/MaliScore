@@ -7,6 +7,7 @@ import repository.CreditRepository;
 import repository.EcheanceRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,18 +30,25 @@ public class CreditService {
             System.out.println("Client introuvable !");
             return;
         }
+
+        List<Credit> credits = creditRepository.findByPersonneId(personne.getId());
+        boolean creditEnCours = credits.stream()
+                .anyMatch(cr -> cr.getMontantOctroye() > 0 && !isCreditRembourse(cr));
+
+        if (creditEnCours) {
+            System.out.println("Le client a déjà un crédit en cours et ne peut pas en demander un nouveau.");
+            return;
+        }
         double score = personne.getScore();
-
-
         c.setDecision(deciderCredit(score));
 
-        boolean estNouveauClient = estNouveauClient(personne);
-        double montantOctroye = calculMontantOctroye(personne, score, estNouveauClient);
+        double montantOctroye = calculerMontantOctroye(personne);
 
         if (c.getDecision() == DecisionType.REFUS_AUTOMATIQUE) {
             System.out.println("Crédit refusé automatiquement en raison du score insuffisant (" + score + ").");
             return;
         }
+
 
         c.setMontantOctroye(montantOctroye);
 
@@ -51,6 +59,11 @@ public class CreditService {
             echeanceRepository.save(e);
         }
 
+    }
+
+    private boolean isCreditRembourse(Credit credit) {
+        List<Echeance> echeances = echeanceRepository.findByCreditId(credit.getId());
+        return echeances.stream().allMatch(e -> e.getDatePaiement() != null);
     }
 
     public void updateCredit(Credit c){
@@ -99,34 +112,46 @@ public class CreditService {
         }
     }
 
+    private double calculerMontantOctroye(Personne client) {
+        double base = 0.0;
 
-    private double calculMontantOctroye(Personne personne, double score, boolean estNouveauClient) {
-        double baseMontant;
-
-        if (personne instanceof Employe) {
-            baseMontant = ((Employe) personne).getSalaire();
-        } else if (personne instanceof Professionnel) {
-            baseMontant = ((Professionnel) personne).getRevenu();
+        if (client instanceof Employe) {
+            base = ((Employe) client).getSalaire();
+        } else if (client instanceof Professionnel) {
+            base = ((Professionnel) client).getRevenu();
         } else {
-            baseMontant = 0;
+            return 0.0;
         }
 
-        if (estNouveauClient) {
-            return baseMontant * 4;
-        } else {
-            if (score > 80) {
-                return baseMontant * 10;
+        boolean estNouveau = estNouveauClient(client);
+
+        if (estNouveau) {
+            if (client.getScore() >= 70 && client.getCreatedAt() != null &&
+                    client.getCreatedAt().isBefore(LocalDateTime.now().minusYears(2))) {
+                return base * 4;
+            } else if (client.getScore() >= 80) {
+                return base * 10;
+            } else if (client.getScore() >= 60) {
+                return base * 7;
             } else {
-                return baseMontant * 7;
+                return 0.0;
+            }
+        } else {
+            if (client.getScore() >= 80) {
+                return base * 10;
+            } else if (client.getScore() >= 60) {
+                return base * 7;
+            } else {
+                return 0.0;
             }
         }
     }
-    private boolean estNouveauClient(Personne personne) {
-        List<Credit> credits = creditRepository.findAll().stream()
-                .filter(c -> c.getPersonneId() == personne.getId())
-                .collect(Collectors.toList());
 
+    private boolean estNouveauClient(Personne client) {
+        List<Credit> credits = creditRepository.findByPersonneId(client.getId());
         return credits.isEmpty();
     }
+
+
 
 }
