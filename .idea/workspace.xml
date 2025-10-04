@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="4219e632-aa59-48ba-9389-04cf55a3d052" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/java.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/MenuClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MenuClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/enums/StatutPaiement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/enums/StatutPaiement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/enums/TypeIncident.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/enums/TypeIncident.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/EcheanceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/EcheanceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/AnalyticsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/AnalyticsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/CreditService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/CreditService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/EcheanceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/EcheanceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/MenuCredit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MenuCredit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/MenuPayment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MenuPayment.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,7 +82,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1759671918184</updated>
-      <workItem from="1759671919652" duration="589000" />
+      <workItem from="1759671919652" duration="2716000" />
     </task>
     <servers />
   </component>

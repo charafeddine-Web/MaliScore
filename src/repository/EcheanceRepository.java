@@ -22,8 +22,8 @@ public class EcheanceRepository {
 
     public void save(Echeance e) {
         String sql = "INSERT INTO echeance (credit_id, date_echeance, mensualite, date_paiement, statut_paiement) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, e.getId());
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setLong(1, e.getCreditId());
             stmt.setDate(2, Date.valueOf(e.getDateEcheance()));
             stmt.setDouble(3, e.getMensualite());
             if (e.getDatePaiement() != null) {
@@ -33,6 +33,12 @@ public class EcheanceRepository {
             }
             stmt.setString(5, e.getStatutPaiement().name());
             stmt.executeUpdate();
+            
+            // Récupérer l'ID généré et l'assigner à l'échéance
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                e.setId(rs.getLong(1));
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

@@ -52,6 +52,11 @@ public class CreditService {
 
         c.setMontantOctroye(montantOctroye);
 
+        // Définir un taux d'intérêt par défaut si absent (ex: 10% => 0.10)
+        if (c.getTauxInteret() <= 0) {
+            c.setTauxInteret(0.10);
+        }
+
         creditRepository.save(c);
 
         List<Echeance> echeances = generateEcheances(c);
@@ -94,7 +99,7 @@ public class CreditService {
             e.setCreditId(c.getId());
             e.setDateEcheance(dateEcheance);
             e.setMensualite(mensualite);
-            e.setStatutPaiement(StatutPaiement.PAYEATEMPS);
+            e.setStatutPaiement(StatutPaiement.PAYE_A_TEMPS);
             echeances.add(e);
 
             dateEcheance = dateEcheance.plusMonths(1);

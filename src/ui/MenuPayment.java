@@ -136,13 +136,13 @@ public class MenuPayment {
         long joursRetard = ChronoUnit.DAYS.between(echeance.getDateEcheance(), datePaiement);
         
         if (joursRetard <= 0) {
-            echeance.setStatutPaiement(StatutPaiement.PAYEATEMPS);
+            echeance.setStatutPaiement(StatutPaiement.PAYE_A_TEMPS);
             System.out.println("✅ Paiement à temps enregistré");
         } else if (joursRetard <= 30) {
-            echeance.setStatutPaiement(StatutPaiement.PAYEENRETARD);
+            echeance.setStatutPaiement(StatutPaiement.PAYE_EN_RETARD);
             System.out.println("⚠️ Paiement en retard enregistré (" + joursRetard + " jours de retard)");
         } else {
-            echeance.setStatutPaiement(StatutPaiement.IMPAYEREGLE);
+            echeance.setStatutPaiement(StatutPaiement.IMPAYE_REGLE);
             System.out.println("⚠️ Impayé réglé enregistré (" + joursRetard + " jours de retard)");
         }
         
@@ -247,7 +247,7 @@ public class MenuPayment {
         System.out.println("🔍 Recherche des échéances en retard...");
         System.out.println("❌ Fonctionnalité à implémenter avec la base de données");
         System.out.println("   → Interroger la table echeance");
-        System.out.println("   → Filtrer par statut ENRETARD et date < aujourd'hui");
+        System.out.println("   → Filtrer par statut EN_RETARD et date < aujourd'hui");
         System.out.println("   → Afficher les détails des échéances");
     }
 
@@ -258,7 +258,7 @@ public class MenuPayment {
         System.out.println("🔍 Recherche des échéances impayées...");
         System.out.println("❌ Fonctionnalité à implémenter avec la base de données");
         System.out.println("   → Interroger la table echeance");
-        System.out.println("   → Filtrer par statut IMPAYENONREGLE");
+        System.out.println("   → Filtrer par statut IMPAYE_NON_REGLE");
         System.out.println("   → Afficher les détails des échéances");
         System.out.println("   → Calculer les jours de retard");
     }

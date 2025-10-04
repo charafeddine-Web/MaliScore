@@ -24,6 +24,10 @@ public class EcheanceService {
         return echeanceRepository.findAll();
     }
 
+    public List<Echeance> getByCreditId(Long creditId) {
+        return echeanceRepository.findByCreditId(creditId);
+    }
+
     public void updateEcheance(Echeance echeance) {
         echeanceRepository.update(echeance);
     }

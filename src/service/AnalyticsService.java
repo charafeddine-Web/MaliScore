@@ -82,8 +82,8 @@ public class AnalyticsService {
                         List<Echeance> echeances = echeanceRepository.findByCreditId(credit.getId());
                         boolean hasRecentIncidents = echeances.stream()
                                 .anyMatch(e -> e.getDateEcheance().isAfter(sixMonthsAgo) && 
-                                             (e.getStatutPaiement() == model.enums.StatutPaiement.ENRETARD ||
-                                              e.getStatutPaiement() == model.enums.StatutPaiement.IMPAYENONREGLE));
+                                             (e.getStatutPaiement() == model.enums.StatutPaiement.EN_RETARD ||
+                                              e.getStatutPaiement() == model.enums.StatutPaiement.IMPAYE_NON_REGLE));
                         if (hasRecentIncidents) return true;
                     }
                     return false;

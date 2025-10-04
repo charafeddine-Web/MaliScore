@@ -4,6 +4,7 @@ import model.Credit;
 import model.Personne;
 import service.ClientService;
 import service.CreditService;
+import service.EcheanceService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -142,13 +143,21 @@ public class MenuCredit {
             if (confirmation == 1) {
                 creditService.addCredit(c);
                 System.out.println("✅ Demande de crédit soumise avec succès !");
-                
+
                 // Afficher la décision automatique
                 if (c.getDecision() != null) {
                     System.out.println("📋 Décision automatique: " + c.getDecision());
                     if (c.getDecision() == model.enums.DecisionType.ACCORD_IMMEDIAT) {
                         System.out.println("💰 Montant octroyé: " + c.getMontantOctroye() + " DH");
-                        System.out.println("📅 Échéances générées automatiquement");
+                        
+                        // Vérifier et afficher le nombre d'échéances créées
+                        try {
+                            EcheanceService echeanceService = new EcheanceService();
+                            java.util.List<model.Echeance> echeancesCreees = echeanceService.getByCreditId(c.getId());
+                            System.out.println("📅 Échéances générées automatiquement: " + (echeancesCreees != null ? echeancesCreees.size() : 0));
+                        } catch (Exception ex) {
+                            System.out.println("⚠️ Impossible de vérifier les échéances: " + ex.getMessage());
+                        }
                     } else if (c.getDecision() == model.enums.DecisionType.ETUDE_MANUELLE) {
                         System.out.println("⚠️ Demande en attente d'étude manuelle");
                         System.out.println("📧 Le client sera contacté sous 48h");
