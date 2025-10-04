@@ -1,7 +1,5 @@
 package ui;
 
-
-
 import model.Echeance;
 import model.Incident;
 import model.enums.TypeIncident;

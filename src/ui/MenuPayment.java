@@ -1,6 +1,4 @@
 package ui;
-
-
 import model.Credit;
 import model.Echeance;
 import model.Incident;
@@ -363,7 +361,6 @@ public class MenuPayment {
                 .sum();
         System.out.println("\nMontant total impaye: " + String.format("%.2f", montantTotalImpaye) + " DH");
     }
-
 
     private void recalculerScore() {
         System.out.println("\n=== RECALCULER LE SCORE D'UN CLIENT ===");

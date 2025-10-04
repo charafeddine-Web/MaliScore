@@ -1,7 +1,5 @@
 package ui;
 
-
-
 import model.Credit;
 import model.Personne;
 import service.ClientService;
