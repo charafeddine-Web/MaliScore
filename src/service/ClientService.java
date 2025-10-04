@@ -1,9 +1,6 @@
 package service;
 
-import model.Employe;
 import model.Personne;
-import model.Professionnel;
-import model.enums.ContratType;
 import repository.ClientRepository;
 
 import java.util.ArrayList;

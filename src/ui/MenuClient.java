@@ -1,5 +1,7 @@
 package ui;
 
+
+
 import model.Employe;
 import model.Personne;
 import model.Professionnel;
@@ -104,39 +106,31 @@ public class MenuClient {
             System.out.print("Secteur (PUBLIC, GRANDE_ENTREPRISE, PME) : ");
             e.setSecteur(model.enums.SecteurType.valueOf(scanner.nextLine().toUpperCase()));
 
-            // Sauvegarder d'abord le client pour obtenir un ID
             if (clientService.addClient(e)) {
-                System.out.println("[SUCCESS] Client ajoute avec succes !");
-                
-                // Calculer automatiquement le score du client après la sauvegarde
-                System.out.println("\n[INFO] Calcul du score en cours...");
+                System.out.println(" Client ajoute avec succes !");
+                System.out.println("\n Calcul du score en cours...");
                 double score = 0;
                 try {
                     service.ScoringService scoringService = new service.ScoringService();
                     score = scoringService.calculerScore(e);
                 } catch (Exception ex) {
-                    System.out.println("[WARNING] Erreur lors du calcul du score: " + ex.getMessage());
-                    // Score par défaut en cas d'erreur
+                    System.out.println(" Erreur lors du calcul du score: " + ex.getMessage());
                     score = 50.0;
                 }
-                
-                System.out.println("📊 Score calculé: " + String.format("%.1f", score) + "/100");
-                
-                // Interprétation du score
+                System.out.println("Score calcule: " + String.format("%.1f", score) + "/100");
                 String interpretation = "";
                 if (score >= 80) {
-                    interpretation = "Excellent - Éligible accord immédiat";
+                    interpretation = "Excellent - Eligibilite accord immediat";
                 } else if (score >= 70) {
-                    interpretation = "Très bon - Éligible étude manuelle";
+                    interpretation = "Tres bon - Eligibilite etude manuelle";
                 } else if (score >= 60) {
-                    interpretation = "Acceptable - Nécessite validation";
+                    interpretation = "Acceptable - Necessite validation";
                 } else {
-                    interpretation = "Insuffisant - Risque élevé";
+                    interpretation = "Insuffisant - Risque eleve";
                 }
-                
-                System.out.println("📋 Interprétation: " + interpretation);
+                System.out.println("Interpretation: " + interpretation);
             } else {
-                System.out.println("[ERROR] Echec de l'ajout du client !");
+                System.out.println(" Echec de l'ajout du client !");
             }
 
         } else if (type == 2) {
@@ -164,46 +158,37 @@ public class MenuClient {
             String autoStr = scanner.nextLine().trim().toLowerCase();
             p.setAutoEntrepreneur("true".equals(autoStr) || "oui".equals(autoStr) || "yes".equals(autoStr));
 
-            // Sauvegarder d'abord le client pour obtenir un ID
             if (clientService.addClient(p)) {
-                System.out.println("[SUCCESS] Client ajoute avec succes !");
-                
-                // Calculer automatiquement le score du client après la sauvegarde
-                System.out.println("\n[INFO] Calcul du score en cours...");
+                System.out.println(" Client ajoute avec succes !");
+                System.out.println("\n Calcul du score en cours...");
                 double score = 0;
                 try {
                     service.ScoringService scoringService = new service.ScoringService();
                     score = scoringService.calculerScore(p);
                 } catch (Exception ex) {
-                    System.out.println("[WARNING] Erreur lors du calcul du score: " + ex.getMessage());
-                    // Score par défaut en cas d'erreur
+                    System.out.println(" Erreur lors du calcul du score: " + ex.getMessage());
                     score = 50.0;
                 }
-                
-                System.out.println("📊 Score calculé: " + String.format("%.1f", score) + "/100");
-                
-                // Interprétation du score
+                System.out.println("Score calcule: " + String.format("%.1f", score) + "/100");
                 String interpretation = "";
                 if (score >= 80) {
-                    interpretation = "Excellent - Éligible accord immédiat";
+                    interpretation = "Excellent - Eligibilite accord immediat";
                 } else if (score >= 70) {
-                    interpretation = "Très bon - Éligible étude manuelle";
+                    interpretation = "Tres bon - Eligibilite etude manuelle";
                 } else if (score >= 60) {
-                    interpretation = "Acceptable - Nécessite validation";
+                    interpretation = "Acceptable - Necessite validation";
                 } else {
-                    interpretation = "Insuffisant - Risque élevé";
+                    interpretation = "Insuffisant - Risque eleve";
                 }
-                
-                System.out.println("📋 Interprétation: " + interpretation);
+                System.out.println("Interpretation: " + interpretation);
             } else {
-                System.out.println("[ERROR] Echec de l'ajout du client !");
+                System.out.println(" Echec de l'ajout du client !");
             }
         }else {
             System.out.println("Choix Invalid !");
             return;
         }
         
-        // Clear any leftover input buffer
         if (scanner.hasNextLine()) {
             scanner.nextLine();
         }

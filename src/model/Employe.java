@@ -23,7 +23,6 @@ public class Employe extends Personne {
         this.secteur = secteur;
     }
 
-    // Getters et Setters
     public double getSalaire() { return salaire; }
     public void setSalaire(double salaire) { this.salaire = salaire; }
 

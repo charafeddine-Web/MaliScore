@@ -34,7 +34,6 @@ public class EcheanceRepository {
             stmt.setString(5, e.getStatutPaiement().name());
             stmt.executeUpdate();
             
-            // Récupérer l'ID généré et l'assigner à l'échéance
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 e.setId(rs.getLong(1));

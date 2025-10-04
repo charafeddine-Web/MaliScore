@@ -20,7 +20,6 @@ public class ScoreHistory {
         this.dateChangement = LocalDateTime.now();
     }
 
-    // Getters et Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

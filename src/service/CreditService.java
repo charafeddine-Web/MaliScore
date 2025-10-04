@@ -42,7 +42,8 @@ public class CreditService {
         double score = personne.getScore();
         c.setDecision(deciderCredit(score));
 
-        double montantOctroye = calculerMontantOctroye(personne);
+        double montantEligible = calculerMontantOctroye(personne);
+        double montantOctroye = Math.min(montantEligible, c.getMontantDemande());
 
         if (c.getDecision() == DecisionType.REFUS_AUTOMATIQUE) {
             System.out.println("Crédit refusé automatiquement en raison du score insuffisant (" + score + ").");
@@ -52,7 +53,6 @@ public class CreditService {
 
         c.setMontantOctroye(montantOctroye);
 
-        // Définir un taux d'intérêt par défaut si absent (ex: 10% => 0.10)
         if (c.getTauxInteret() <= 0) {
             c.setTauxInteret(0.10);
         }

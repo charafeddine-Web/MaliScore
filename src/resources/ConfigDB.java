@@ -1,7 +1,7 @@
 package resources;
 
 public class ConfigDB {
-    private String URL ="jdbc:mysql://localhost:3306/credit_scoring";
+    private String URL = "jdbc:mysql://localhost:3306/credit_scoring";
     private String root = "root";
     private String password = "";
     private String driver = "com.mysql.cj.jdbc.Driver";

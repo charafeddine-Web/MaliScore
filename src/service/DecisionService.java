@@ -20,73 +20,52 @@ public class DecisionService {
         this.scanner = new Scanner(System.in);
     }
 
-    /**
-     * Traite les demandes nécessitant une étude manuelle
-     */
-
-    public void traiterEtudesManuelles() {
-        List<Credit> creditsEnAttente = creditRepository.findAll().stream()
-                .filter(c -> c.getDecision() == DecisionType.ETUDE_MANUELLE)
-                .collect(java.util.stream.Collectors.toList());
-
-        if (creditsEnAttente.isEmpty()) {
-            System.out.println("Aucune demande en attente d'étude manuelle.");
-            return;
-        }
-
-        System.out.println("\n=== ÉTUDES MANUELLES EN ATTENTE ===");
-        System.out.println("Nombre de demandes: " + creditsEnAttente.size());
-
-        for (Credit credit : creditsEnAttente) {
-            traiterCreditManuel(credit);
-        }
-    }
-
-    /**
-     * Traite un crédit spécifique en étude manuelle
-     */
-    private void traiterCreditManuel(Credit credit) {
-        Personne client = clientRepository.findById(credit.getPersonneId().intValue());
-        if (client == null) {
-            System.out.println("Client introuvable pour le crédit ID: " + credit.getId());
-            return;
-        }
-
-        System.out.println("\n--- CRÉDIT ID: " + credit.getId() + " ---");
-        System.out.println("Client: " + client.getNom() + " " + client.getPrenom());
-        System.out.println("Score: " + client.getScore());
-        System.out.println("Montant demandé: " + credit.getMontantDemande() + " DH");
-        System.out.println("Type: " + credit.getTypeCredit());
-        
-        afficherDetailsClient(client);
-
-        System.out.println("\nOptions:");
-        System.out.println("1. Approuver le crédit");
-        System.out.println("2. Refuser le crédit");
-        System.out.println("3. Demander des documents supplémentaires");
-        System.out.println("4. Passer au suivant");
-        System.out.print("Votre choix: ");
-
-        int choix = scanner.nextInt();
-        scanner.nextLine();
-
-        switch (choix) {
-            case 1:
-                approuverCredit(credit, client);
-                break;
-            case 2:
-                refuserCredit(credit, client);
-                break;
-            case 3:
-                demanderDocuments(credit, client);
-                break;
-            case 4:
-                System.out.println("Crédit laissé en attente.");
-                break;
-            default:
-                System.out.println("Choix invalide.");
-        }
-    }
+//
+//    /**
+//     * Traite un crédit spécifique en étude manuelle
+//     */
+//    private void traiterCreditManuel(Credit credit) {
+//        Personne client = clientRepository.findById(credit.getPersonneId().intValue());
+//        if (client == null) {
+//            System.out.println("Client introuvable pour le crédit ID: " + credit.getId());
+//            return;
+//        }
+//
+//        System.out.println("\n--- CRÉDIT ID: " + credit.getId() + " ---");
+//        System.out.println("Client: " + client.getNom() + " " + client.getPrenom());
+//        System.out.println("Score: " + client.getScore());
+//        System.out.println("Montant demandé: " + credit.getMontantDemande() + " DH");
+//        System.out.println("Type: " + credit.getTypeCredit());
+//
+//        afficherDetailsClient(client);
+//
+//        System.out.println("\nOptions:");
+//        System.out.println("1. Approuver le crédit");
+//        System.out.println("2. Refuser le crédit");
+//        System.out.println("3. Demander des documents supplémentaires");
+//        System.out.println("4. Passer au suivant");
+//        System.out.print("Votre choix: ");
+//
+//        int choix = scanner.nextInt();
+//        scanner.nextLine();
+//
+//        switch (choix) {
+//            case 1:
+//                approuverCredit(credit, client);
+//                break;
+//            case 2:
+//                refuserCredit(credit, client);
+//                break;
+//            case 3:
+//                demanderDocuments(credit, client);
+//                break;
+//            case 4:
+//                System.out.println("Crédit laissé en attente.");
+//                break;
+//            default:
+//                System.out.println("Choix invalide.");
+//        }
+//    }
 
     /**
      * Affiche les détails complets du client pour l'évaluation
@@ -115,7 +94,6 @@ public class DecisionService {
             System.out.println("Auto-entrepreneur: " + (prof.isAutoEntrepreneur() ? "Oui" : "Non"));
         }
 
-        // Afficher l'historique de crédits
         List<Credit> historiqueCredits = creditRepository.findByPersonneId(client.getId());
         if (!historiqueCredits.isEmpty()) {
             System.out.println("\nHistorique des crédits:");
@@ -150,7 +128,7 @@ public class DecisionService {
         credit.setDecision(DecisionType.ACCORD_IMMEDIAT);
         creditRepository.update(credit);
 
-        System.out.println("✓ Crédit approuvé pour " + montantOctroye + " DH");
+        System.out.println("Crédit approuvé pour " + montantOctroye + " DH");
     }
 
     /**
@@ -224,7 +202,6 @@ public class DecisionService {
     /**
      * Calcule et affiche les recommandations de décision
      */
-
     public void afficherRecommandations(Credit credit) {
         Personne client = clientRepository.findById(credit.getPersonneId().intValue());
         if (client == null) return;
@@ -236,7 +213,6 @@ public class DecisionService {
         double scoreRecalcule = scoringService.calculerScore(client);
         System.out.println("Score recalculé: " + scoreRecalcule);
 
-        // Recommandations basées sur le score
         if (scoreRecalcule >= 80) {
             System.out.println(" RECOMMANDATION: ACCORD IMMÉDIAT");
             System.out.println("   - Score excellent");
@@ -257,9 +233,7 @@ public class DecisionService {
         afficherFacteursRisque(client);
     }
 
-    /**
-     * Calcule le montant recommandé basé sur le profil du client
-     */
+
     private double calculerMontantRecommand(Personne client) {
         double revenus = 0;
         if (client instanceof Employe) {
@@ -267,7 +241,6 @@ public class DecisionService {
         } else if (client instanceof Professionnel) {
             revenus = ((Professionnel) client).getRevenu();
         }
-
         boolean estNouveauClient = creditRepository.findByPersonneId(client.getId()).isEmpty();
 
         if (estNouveauClient) {
@@ -284,12 +257,11 @@ public class DecisionService {
     /**
      * Affiche les facteurs de risque identifiés
      */
-
     private void afficherFacteursRisque(Personne client) {
         System.out.println("\n--- FACTEURS DE RISQUE ---");
         
         if (client.getScore() < 60) {
-            System.out.println("⚠ Score faible (" + client.getScore() + ")");
+            System.out.println("Score faible (" + client.getScore() + ")");
         }
 
         if (client instanceof Employe) {
@@ -323,7 +295,6 @@ public class DecisionService {
     /**
      * Valide les critères d'éligibilité par profil
      */
-
     public boolean validerEligibilite(Personne client, double montantDemande) {
         List<Credit> credits = creditRepository.findByPersonneId(client.getId());
         boolean estNouveauClient = credits.isEmpty();
@@ -361,12 +332,10 @@ public class DecisionService {
                 return false;
             }
 
-            // Vérifier qu'il n'y a pas trop de refus récents
             long refusRecents = credits.stream()
                     .filter(c -> c.getDecision() == DecisionType.REFUS_AUTOMATIQUE)
                     .count();
             
-            // Si plus de 2 refus, on refuse automatiquement
             if (refusRecents > 2) {
                 System.out.println("Trop de refus récents (" + refusRecents + " refus)");
                 return false;

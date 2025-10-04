@@ -55,8 +55,6 @@ public class IncidentRepository {
                 incident.setScoreImpact(rs.getInt("score_impact"));
                 incident.setTypeIncident(TypeIncident.valueOf(rs.getString("type_incident")));
                 
-                // Note: Pour simplifier, on ne charge pas l'échéance complète
-                // Dans une vraie implémentation, on utiliserait un service pour charger l'échéance
                 
                 return incident;
             }

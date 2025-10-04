@@ -1,5 +1,7 @@
 package ui;
 
+
+
 import model.Credit;
 import model.Personne;
 import service.ClientService;
@@ -59,7 +61,7 @@ public class MenuCredit {
     }
 
     private void ajouterCredit() {
-        System.out.println("\n=== DEMANDE DE CRÉDIT ===");
+        System.out.println("\n=== DEMANDE DE CREDIT ===");
         
         System.out.print("ID du client : ");
         long personneId = scanner.nextLong();
@@ -76,7 +78,6 @@ public class MenuCredit {
         System.out.println("Nom: " + client.getNom() + " " + client.getPrenom());
         System.out.println("Score actuel: " + client.getScore());
 
-        // Recalculer le score pour s'assurer qu'il est à jour
         service.ScoringService scoringService = new service.ScoringService();
         double scoreRecalcule = scoringService.calculerScore(client);
         System.out.println("Score recalculé: " + scoreRecalcule);
@@ -128,7 +129,6 @@ public class MenuCredit {
                 return;
             }
 
-            // Afficher les recommandations
             decisionService.afficherRecommandations(c);
 
             System.out.println("\n--- CONFIRMATION DE LA DEMANDE ---");
@@ -142,35 +142,32 @@ public class MenuCredit {
 
             if (confirmation == 1) {
                 creditService.addCredit(c);
-                System.out.println("✅ Demande de crédit soumise avec succès !");
+                System.out.println("Demande de credit soumise avec succes.");
 
-                // Afficher la décision automatique
                 if (c.getDecision() != null) {
-                    System.out.println("📋 Décision automatique: " + c.getDecision());
+                    System.out.println("Decision automatique: " + c.getDecision());
                     if (c.getDecision() == model.enums.DecisionType.ACCORD_IMMEDIAT) {
-                        System.out.println("💰 Montant octroyé: " + c.getMontantOctroye() + " DH");
-                        
-                        // Vérifier et afficher le nombre d'échéances créées
+                        System.out.println("Montant octroye: " + c.getMontantOctroye() + " DH");
                         try {
                             EcheanceService echeanceService = new EcheanceService();
                             java.util.List<model.Echeance> echeancesCreees = echeanceService.getByCreditId(c.getId());
-                            System.out.println("📅 Échéances générées automatiquement: " + (echeancesCreees != null ? echeancesCreees.size() : 0));
+                            System.out.println("Echeances generees automatiquement: " + (echeancesCreees != null ? echeancesCreees.size() : 0));
                         } catch (Exception ex) {
-                            System.out.println("⚠️ Impossible de vérifier les échéances: " + ex.getMessage());
+                            System.out.println("Impossible de verifier les echeances: " + ex.getMessage());
                         }
                     } else if (c.getDecision() == model.enums.DecisionType.ETUDE_MANUELLE) {
-                        System.out.println("⚠️ Demande en attente d'étude manuelle");
-                        System.out.println("📧 Le client sera contacté sous 48h");
+                        System.out.println("Demande en attente d'etude manuelle");
+                        System.out.println("Le client sera contacte sous 48h");
                     } else {
-                        System.out.println("❌ Demande refusée automatiquement");
+                        System.out.println("Demande refusee automatiquement");
                     }
                 }
             } else {
-                System.out.println("❌ Demande annulée.");
+                System.out.println("Demande annulee.");
             }
 
         } catch (Exception e) {
-            System.out.println("❌ Erreur lors de la demande de crédit : " + e.getMessage());
+            System.out.println("Erreur lors de la demande de credit : " + e.getMessage());
         }
     }
 

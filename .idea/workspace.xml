@@ -6,14 +6,25 @@
   <component name="ChangeListManager">
     <list default="true" id="4219e632-aa59-48ba-9389-04cf55a3d052" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/enums/StatutPaiement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/enums/StatutPaiement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/enums/TypeIncident.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/enums/TypeIncident.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Credit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Credit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Employe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Employe.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Personne.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Personne.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Professionnel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Professionnel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/ScoreHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/ScoreHistory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/repository/EcheanceRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/EcheanceRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/IncidentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/repository/IncidentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repository/ScoreHistoryRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/ConfigDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/ConfigDB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/AnalyticsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/AnalyticsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/ClientService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/ClientService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/service/CreditService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/CreditService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/EcheanceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/EcheanceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/DecisionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/DecisionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/ScoringService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/ScoringService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/MenuAnalytics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MenuAnalytics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/MenuClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MenuClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/MenuCredit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MenuCredit.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/MenuPayment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MenuPayment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/MenuPranc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MenuPranc.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,7 +93,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1759671918184</updated>
-      <workItem from="1759671919652" duration="2716000" />
+      <workItem from="1759671919652" duration="12497000" />
     </task>
     <servers />
   </component>

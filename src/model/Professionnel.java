@@ -24,7 +24,6 @@ public class Professionnel extends Personne {
         this.autoEntrepreneur =autoEntrepreneur;
     }
 
-    // Getters et Setters
     public double getRevenu() { return revenu; }
     public void setRevenu(double revenu) { this.revenu = revenu; }
 
