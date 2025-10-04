@@ -1,6 +1,5 @@
 package repository;
 
-import model.Echeance;
 import model.Incident;
 import model.enums.TypeIncident;
 import resources.ConfigDB;
@@ -11,8 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IncidentRepository {
-
-    private  Connection conn;
+    private Connection conn;
 
     public IncidentRepository() {
         try {
@@ -25,19 +23,17 @@ public class IncidentRepository {
 
     public boolean save(Incident incident) {
         String sql = "INSERT INTO incident (echeance_id, date_incident, type_incident, score_impact) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setLong(1, incident.getEcheance().getId());
-            ps.setDate(2, Date.valueOf(incident.getDateIncident()));
-            ps.setString(3, incident.getTypeIncident().name());
-            ps.setInt(4, incident.getScoreImpact());
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setLong(1, incident.getEcheance().getId());
+            stmt.setDate(2, Date.valueOf(incident.getDateIncident()));
+            stmt.setString(3, incident.getTypeIncident().name());
+            stmt.setInt(4, incident.getScoreImpact());
 
-            int rows = ps.executeUpdate();
-
-            if (rows > 0) {
-                try (ResultSet rs = ps.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        incident.setId(rs.getLong(1));
-                    }
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    incident.setId(rs.getLong(1));
                 }
                 return true;
             }
@@ -49,11 +45,20 @@ public class IncidentRepository {
 
     public Incident findById(Long id) {
         String sql = "SELECT * FROM incident WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return mapToIncident(rs);
+                Incident incident = new Incident();
+                incident.setId(rs.getLong("id"));
+                incident.setDateIncident(rs.getDate("date_incident").toLocalDate());
+                incident.setScoreImpact(rs.getInt("score_impact"));
+                incident.setTypeIncident(TypeIncident.valueOf(rs.getString("type_incident")));
+                
+                // Note: Pour simplifier, on ne charge pas l'échéance complète
+                // Dans une vraie implémentation, on utiliserait un service pour charger l'échéance
+                
+                return incident;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,10 +69,17 @@ public class IncidentRepository {
     public List<Incident> findAll() {
         List<Incident> incidents = new ArrayList<>();
         String sql = "SELECT * FROM incident";
-        try (Statement st = conn.createStatement()) {
-            ResultSet rs = st.executeQuery(sql);
+        try (PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
             while (rs.next()) {
-                incidents.add(mapToIncident(rs));
+                Incident incident = new Incident();
+                incident.setId(rs.getLong("id"));
+                incident.setDateIncident(rs.getDate("date_incident").toLocalDate());
+                incident.setScoreImpact(rs.getInt("score_impact"));
+                incident.setTypeIncident(TypeIncident.valueOf(rs.getString("type_incident")));
+                
+                incidents.add(incident);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -76,45 +88,73 @@ public class IncidentRepository {
     }
 
     public boolean update(Incident incident) {
-        String sql = "UPDATE incident SET echeance_id = ?, date_incident = ?, type_incident = ?, score_impact = ? WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, incident.getEcheance().getId());
-            ps.setDate(2, Date.valueOf(incident.getDateIncident()));
-            ps.setString(3, incident.getTypeIncident().name());
-            ps.setInt(4, incident.getScoreImpact());
-            ps.setLong(5, incident.getId());
-            int rows = ps.executeUpdate();
-            return rows > 0;
+        String sql = "UPDATE incident SET date_incident=?, type_incident=?, score_impact=? WHERE id=?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDate(1, Date.valueOf(incident.getDateIncident()));
+            stmt.setString(2, incident.getTypeIncident().name());
+            stmt.setInt(3, incident.getScoreImpact());
+            stmt.setLong(4, incident.getId());
+
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
     public boolean delete(Long id) {
         String sql = "DELETE FROM incident WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, id);
-            int rows = ps.executeUpdate();
-            return rows > 0;
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
-    private Incident mapToIncident(ResultSet rs) throws SQLException {
-        Incident incident = new Incident();
-        incident.setId(rs.getLong("id"));
+    public List<Incident> findByEcheanceId(Long echeanceId) {
+        List<Incident> incidents = new ArrayList<>();
+        String sql = "SELECT * FROM incident WHERE echeance_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, echeanceId);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                Incident incident = new Incident();
+                incident.setId(rs.getLong("id"));
+                incident.setDateIncident(rs.getDate("date_incident").toLocalDate());
+                incident.setScoreImpact(rs.getInt("score_impact"));
+                incident.setTypeIncident(TypeIncident.valueOf(rs.getString("type_incident")));
+                
+                incidents.add(incident);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return incidents;
+    }
 
-        Echeance echeance = new Echeance();
-        echeance.setId(rs.getLong("echeance_id"));
-        incident.setEcheance(echeance);
-
-        incident.setDateIncident(rs.getDate("date_incident").toLocalDate());
-        incident.setTypeIncident(TypeIncident.valueOf(rs.getString("type_incident")));
-        incident.setScoreImpact(rs.getInt("score_impact"));
-
-        return incident;
+    public List<Incident> findByDateRange(LocalDate startDate, LocalDate endDate) {
+        List<Incident> incidents = new ArrayList<>();
+        String sql = "SELECT * FROM incident WHERE date_incident BETWEEN ? AND ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setDate(1, Date.valueOf(startDate));
+            stmt.setDate(2, Date.valueOf(endDate));
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                Incident incident = new Incident();
+                incident.setId(rs.getLong("id"));
+                incident.setDateIncident(rs.getDate("date_incident").toLocalDate());
+                incident.setScoreImpact(rs.getInt("score_impact"));
+                incident.setTypeIncident(TypeIncident.valueOf(rs.getString("type_incident")));
+                
+                incidents.add(incident);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return incidents;
     }
 }

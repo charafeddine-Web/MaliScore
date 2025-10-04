@@ -69,3 +69,13 @@ CREATE TABLE incident (
     score_impact INT,
     FOREIGN KEY (echeance_id) REFERENCES echeance(id) ON DELETE CASCADE
 );
+
+CREATE TABLE score_history (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    personne_id BIGINT NOT NULL,
+    ancien_score DOUBLE NOT NULL,
+    nouveau_score DOUBLE NOT NULL,
+    raison VARCHAR(255),
+    date_changement TIMESTAMP NOT NULL,
+    FOREIGN KEY (personne_id) REFERENCES personne(id) ON DELETE CASCADE
+);

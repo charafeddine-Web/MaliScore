@@ -232,6 +232,11 @@ public class ClientRepository {
     }
 
     public void update(Personne p){
+        if (conn == null) {
+            System.out.println("WARNING: Cannot update client - Database connection not available.");
+            return;
+        }
+        
         String sql = "UPDATE personne SET nom=?, prenom=?, date_naissance=?, ville=?, nombre_enfants=?, "
                 + "investissement=?, placement=?, situation_familiale=?, score=? WHERE id=?";
 

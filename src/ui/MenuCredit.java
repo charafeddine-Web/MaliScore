@@ -58,9 +58,8 @@ public class MenuCredit {
     }
 
     private void ajouterCredit() {
-        System.out.println("=== Ajouter un crédit ===");
-        Credit c = new Credit();
-
+        System.out.println("\n=== DEMANDE DE CRÉDIT ===");
+        
         System.out.print("ID du client : ");
         long personneId = scanner.nextLong();
         scanner.nextLine();
@@ -68,57 +67,101 @@ public class MenuCredit {
         ClientService clientService = new ClientService();
         Personne client = clientService.findClient((int) personneId);
         if (client == null) {
-            System.out.println("Client introuvable !");
+            System.out.println("❌ Client introuvable !");
             return;
         }
-        c.setPersonneId(personneId);
+
+        System.out.println("\n--- INFORMATIONS CLIENT ---");
+        System.out.println("Nom: " + client.getNom() + " " + client.getPrenom());
+        System.out.println("Score actuel: " + client.getScore());
+
+        // Recalculer le score pour s'assurer qu'il est à jour
+        service.ScoringService scoringService = new service.ScoringService();
+        double scoreRecalcule = scoringService.calculerScore(client);
+        System.out.println("Score recalculé: " + scoreRecalcule);
 
         try {
-            System.out.print("Date du crédit (yyyy-mm-dd) : ");
-            LocalDate date = LocalDate.parse(scanner.nextLine());
-            c.setDateCredit(date);
+            System.out.print("\nDate du crédit (yyyy-mm-dd) [Entrée pour aujourd'hui]: ");
+            String dateStr = scanner.nextLine();
+            LocalDate date;
+            if (dateStr.trim().isEmpty()) {
+                date = LocalDate.now();
+            } else {
+                date = LocalDate.parse(dateStr);
+            }
 
-            System.out.print("Montant demandé : ");
+            System.out.print("Montant demandé (DH) : ");
             double montantDemande = scanner.nextDouble();
+            scanner.nextLine();
             if (montantDemande <= 0) {
-                System.out.println("Montant invalide !");
+                System.out.println(" Montant invalide !");
                 return;
             }
-            c.setMontantDemande(montantDemande);
-
-            System.out.print("Montant octroyé : ");
-            double montantOctroye = scanner.nextDouble();
-            c.setMontantOctroye(montantOctroye);
-
-            System.out.print("Taux d'intérêt : ");
-            double taux = scanner.nextDouble();
-            c.setTauxInteret(taux);
-
-            System.out.print("Durée (mois) : ");
-            int duree = scanner.nextInt();
-            c.setDureeEnMois(duree);
-            scanner.nextLine();
 
             System.out.print("Type de crédit (CONSO, IMMO, AUTO, PERSO) : ");
             String typeStr = scanner.nextLine().toUpperCase();
+            model.enums.CreditType typeCredit;
             try {
-                c.setTypeCredit(model.enums.CreditType.valueOf(typeStr));
+                typeCredit = model.enums.CreditType.valueOf(typeStr);
             } catch (IllegalArgumentException e) {
                 System.out.println("Type de crédit invalide !");
                 return;
             }
-            System.out.print("Décision (ACCORD_IMMEDIAT, ETUDE_MANUELLE, REFUS_AUTOMATIQUE) : ");
-            String decisionStr = scanner.nextLine().toUpperCase();
-            try {
-                c.setDecision(model.enums.DecisionType.valueOf(decisionStr));
-            } catch (IllegalArgumentException e) {
-                System.out.println("Décision invalide !");
+
+            System.out.print("Durée souhaitée (mois) : ");
+            int duree = scanner.nextInt();
+            scanner.nextLine();
+
+            Credit c = new Credit();
+            c.setPersonneId(personneId);
+            c.setDateCredit(date);
+            c.setMontantDemande(montantDemande);
+            c.setTypeCredit(typeCredit);
+            c.setDureeEnMois(duree);
+
+            service.DecisionService decisionService = new service.DecisionService();
+            boolean estEligible = decisionService.validerEligibilite(client, montantDemande);
+            
+            if (!estEligible) {
+                System.out.println("Demande non éligible selon les critères.");
                 return;
             }
-            creditService.addCredit(c);
-            System.out.println("Crédit ajouté avec succès !");
+
+            // Afficher les recommandations
+            decisionService.afficherRecommandations(c);
+
+            System.out.println("\n--- CONFIRMATION DE LA DEMANDE ---");
+            System.out.println("Voulez-vous soumettre cette demande de crédit ?");
+            System.out.println("1. Oui, soumettre");
+            System.out.println("2. Non, annuler");
+            System.out.print("Votre choix : ");
+            
+            int confirmation = scanner.nextInt();
+            scanner.nextLine();
+
+            if (confirmation == 1) {
+                creditService.addCredit(c);
+                System.out.println("✅ Demande de crédit soumise avec succès !");
+                
+                // Afficher la décision automatique
+                if (c.getDecision() != null) {
+                    System.out.println("📋 Décision automatique: " + c.getDecision());
+                    if (c.getDecision() == model.enums.DecisionType.ACCORD_IMMEDIAT) {
+                        System.out.println("💰 Montant octroyé: " + c.getMontantOctroye() + " DH");
+                        System.out.println("📅 Échéances générées automatiquement");
+                    } else if (c.getDecision() == model.enums.DecisionType.ETUDE_MANUELLE) {
+                        System.out.println("⚠️ Demande en attente d'étude manuelle");
+                        System.out.println("📧 Le client sera contacté sous 48h");
+                    } else {
+                        System.out.println("❌ Demande refusée automatiquement");
+                    }
+                }
+            } else {
+                System.out.println("❌ Demande annulée.");
+            }
+
         } catch (Exception e) {
-            System.out.println("Erreur lors de l'ajout du crédit : " + e.getMessage());
+            System.out.println("❌ Erreur lors de la demande de crédit : " + e.getMessage());
         }
     }
 

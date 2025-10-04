@@ -132,6 +132,11 @@ public class CreditRepository {
 
     public List<Credit> findByPersonneId(Long personneId) {
         List<Credit> credits = new ArrayList<>();
+        if (conn == null) {
+            System.out.println("WARNING: Database connection not available");
+            return credits;
+        }
+        
         String sql = "SELECT * FROM credit WHERE personne_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

@@ -4,6 +4,7 @@ import model.*;
 import repository.ClientRepository;
 import repository.CreditRepository;
 import repository.EcheanceRepository;
+import repository.ScoreHistoryRepository;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -15,14 +16,37 @@ public class ScoringService {
     private ClientRepository clientRepository;
     private CreditRepository creditRepository;
     private EcheanceRepository echeanceRepository;
+    private ScoreHistoryRepository scoreHistoryRepository;
+    
     public ScoringService(){
-        this.clientRepository=new ClientRepository();
-        this.creditRepository = new CreditRepository();
-        this.echeanceRepository = new EcheanceRepository();
+        try {
+            this.clientRepository=new ClientRepository();
+            this.creditRepository = new CreditRepository();
+            this.echeanceRepository = new EcheanceRepository();
+            this.scoreHistoryRepository = new ScoreHistoryRepository();
+        } catch (Exception e) {
+            System.out.println("Error initializing repositories: " + e.getMessage());
+            // Set all repositories to null if initialization fails
+            this.clientRepository = null;
+            this.creditRepository = null;
+            this.echeanceRepository = null;
+            this.scoreHistoryRepository = null;
+        }
     }
 
 
     public double calculerScore(Personne p) {
+        return calculerScore(p, "Recalcul automatique");
+    }
+
+    public double calculerScore(Personne p, String raison) {
+        // Si les repositories ne sont pas disponibles, calculer en mode local
+        if (clientRepository == null) {
+            System.out.println("WARNING: Mode calcul local - Base de donnees non disponible");
+            return calculerScoreLocal(p);
+        }
+        
+        double ancienScore = p.getScore();
         double score = 0;
 
         score += calculStabiliteProfessionnelle(p);
@@ -30,8 +54,33 @@ public class ScoringService {
         score += calculHistorique(p);
         score += calculRelationClient(p);
         score += calculPatrimoine(p);
+        
+        if (scoreHistoryRepository != null && Math.abs(score - ancienScore) > 0.01) {
+            ScoreHistory scoreHistory = new ScoreHistory(p.getId(), ancienScore, score, raison);
+            scoreHistoryRepository.save(scoreHistory);
+        }
+        
         p.setScore(score);
-        clientRepository.update(p);
+        if (clientRepository != null) {
+            clientRepository.update(p);
+        }
+        return score;
+    }
+    
+    /**
+     * Calcul du score en mode local (sans base de données)
+     */
+    private double calculerScoreLocal(Personne p) {
+        double score = 0;
+
+        score += calculStabiliteProfessionnelle(p);
+        score += calculCapaciteFinanciere(p);
+        // En mode local, on considère qu'il n'y a pas d'historique (0 points)
+        // score += calculHistorique(p); // Skip - no database
+        score += calculRelationClientLocal(p);
+        score += calculPatrimoine(p);
+        
+        p.setScore(score);
         return score;
     }
 
@@ -97,6 +146,8 @@ public class ScoringService {
     };
 
     private double calculHistorique(Personne p) {
+        if (creditRepository == null) return 0;
+        
         List<Credit> credits = creditRepository.findByPersonneId(p.getId());
         if (credits.isEmpty()) return 0;
 
@@ -159,11 +210,13 @@ public class ScoringService {
         double points = 0;
 
         boolean nouveau = true;
-        try {
-            List<Credit> credits = creditRepository.findByPersonneId(p.getId());
-            if (credits != null && !credits.isEmpty()) nouveau = false;
-        } catch (Exception ex) {
-            nouveau = true;
+        if (creditRepository != null) {
+            try {
+                List<Credit> credits = creditRepository.findByPersonneId(p.getId());
+                if (credits != null && !credits.isEmpty()) nouveau = false;
+            } catch (Exception ex) {
+                nouveau = true;
+            }
         }
 
         if (nouveau) {
@@ -198,6 +251,41 @@ public class ScoringService {
                 points += 5;
             }
         }
+
+        if (points < 0) points = 0;
+        if (points > 10) points = 10;
+        return points;
+    }
+    
+    /**
+     * Calcul de la relation client en mode local (considère comme nouveau client)
+     */
+    private double calculRelationClientLocal(Personne p) {
+        double points = 0;
+
+        // En mode local, on considère que c'est un nouveau client
+        // Score basé sur l'âge et la situation familiale
+        if (p.getDateNaissance() != null) {
+            int age = Period.between(p.getDateNaissance(), LocalDate.now()).getYears();
+            if (age >= 36 && age <= 55) points += 10;
+            else if (age >= 26 && age <= 35) points += 8;
+            else if (age >= 18 && age <= 25) points += 4;
+            else if (age > 55) points += 6;
+        }
+
+        if (p.getSituationFamiliale() != null) {
+            if ("marie".equalsIgnoreCase(p.getSituationFamiliale()) || 
+                "marié".equalsIgnoreCase(p.getSituationFamiliale())) {
+                points += 3;
+            } else {
+                points += 2;
+            }
+        }
+
+        int enfants = p.getNombreEnfants();
+        if (enfants == 0) points += 2;
+        else if (enfants <= 2) points += 1;
+        else points += 0;
 
         if (points < 0) points = 0;
         if (points > 10) points = 10;

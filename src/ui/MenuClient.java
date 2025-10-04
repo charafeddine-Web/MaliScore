@@ -68,14 +68,13 @@ public class MenuClient {
         scanner.nextLine();
         System.out.print("Investissement (true/false) : ");
         boolean investissement = Boolean.parseBoolean(scanner.nextLine());
-        System.out.print("Placement : ");
-        boolean placement = scanner.nextBoolean();
-        scanner.nextLine();
+        System.out.print("Placement (true/false) : ");
+        String placementStr = scanner.nextLine().trim().toLowerCase();
+        boolean placement = "true".equals(placementStr) || "oui".equals(placementStr) || "yes".equals(placementStr);
         System.out.print("Situation familiale : ");
         String situation = scanner.nextLine();
 
         LocalDateTime createdAt = LocalDateTime.now();
-        double score = 0.0;
 
         if (type == 1) {
 
@@ -89,7 +88,6 @@ public class MenuClient {
             e.setPlacement(placement);
             e.setSituationFamiliale(situation);
             e.setCreatedAt(createdAt);
-            e.setScore(score);
 
             System.out.print("Salaire : ");
             e.setSalaire(scanner.nextDouble());
@@ -106,7 +104,39 @@ public class MenuClient {
             System.out.print("Secteur (PUBLIC, GRANDE_ENTREPRISE, PME) : ");
             e.setSecteur(model.enums.SecteurType.valueOf(scanner.nextLine().toUpperCase()));
 
-            clientService.addClient(e);
+            // Calculer automatiquement le score du client
+            System.out.println("\n[INFO] Calcul du score en cours...");
+            double score = 0;
+            try {
+                service.ScoringService scoringService = new service.ScoringService();
+                score = scoringService.calculerScore(e);
+            } catch (Exception ex) {
+                System.out.println("[WARNING] Erreur lors du calcul du score: " + ex.getMessage());
+                // Score par défaut en cas d'erreur
+                score = 50.0;
+            }
+            
+            System.out.println("📊 Score calculé: " + String.format("%.1f", score) + "/100");
+            
+            // Interprétation du score
+            String interpretation = "";
+            if (score >= 80) {
+                interpretation = "Excellent - Éligible accord immédiat";
+            } else if (score >= 70) {
+                interpretation = "Très bon - Éligible étude manuelle";
+            } else if (score >= 60) {
+                interpretation = "Acceptable - Nécessite validation";
+            } else {
+                interpretation = "Insuffisant - Risque élevé";
+            }
+            
+            System.out.println("📋 Interprétation: " + interpretation);
+            
+            if (clientService.addClient(e)) {
+                System.out.println("[SUCCESS] Client ajoute avec succes !");
+            } else {
+                System.out.println("[ERROR] Echec de l'ajout du client !");
+            }
 
         } else if (type == 2) {
             Professionnel p = new Professionnel();
@@ -119,7 +149,6 @@ public class MenuClient {
             p.setPlacement(placement);
             p.setSituationFamiliale(situation);
             p.setCreatedAt(createdAt);
-            p.setScore(score);
 
             System.out.print("Revenu : ");
             p.setRevenu(scanner.nextDouble());
@@ -130,16 +159,52 @@ public class MenuClient {
             p.setSecteurActivite(scanner.nextLine());
             System.out.print("Activite (Avocat, Mecanicien,..) : ");
             p.setActivite(scanner.nextLine());
-            System.out.print("AutoEntrepreneur (True, False) : ");
-            p.setAutoEntrepreneur(scanner.nextBoolean());
+            System.out.print("AutoEntrepreneur (true/false) : ");
+            String autoStr = scanner.nextLine().trim().toLowerCase();
+            p.setAutoEntrepreneur("true".equals(autoStr) || "oui".equals(autoStr) || "yes".equals(autoStr));
 
-
-            clientService.addClient(p);
+            // Calculer automatiquement le score du client
+            System.out.println("\n[INFO] Calcul du score en cours...");
+            double score = 0;
+            try {
+                service.ScoringService scoringService = new service.ScoringService();
+                score = scoringService.calculerScore(p);
+            } catch (Exception ex) {
+                System.out.println("[WARNING] Erreur lors du calcul du score: " + ex.getMessage());
+                // Score par défaut en cas d'erreur
+                score = 50.0;
+            }
+            
+            System.out.println("📊 Score calculé: " + String.format("%.1f", score) + "/100");
+            
+            // Interprétation du score
+            String interpretation = "";
+            if (score >= 80) {
+                interpretation = "Excellent - Éligible accord immédiat";
+            } else if (score >= 70) {
+                interpretation = "Très bon - Éligible étude manuelle";
+            } else if (score >= 60) {
+                interpretation = "Acceptable - Nécessite validation";
+            } else {
+                interpretation = "Insuffisant - Risque élevé";
+            }
+            
+            System.out.println("📋 Interprétation: " + interpretation);
+            
+            if (clientService.addClient(p)) {
+                System.out.println("[SUCCESS] Client ajoute avec succes !");
+            } else {
+                System.out.println("[ERROR] Echec de l'ajout du client !");
+            }
         }else {
             System.out.println("Choix Invalid !");
+            return;
         }
-
-        System.out.println("Client ajouté avec succès !");
+        
+        // Clear any leftover input buffer
+        if (scanner.hasNextLine()) {
+            scanner.nextLine();
+        }
     }
 
     private void consulterClient() {
@@ -214,12 +279,13 @@ public class MenuClient {
             }
 
 
-            System.out.print("Nouveau placement (True/False) (" + p.getPlacement() + ") : ");
-            boolean placementStr = scanner.nextBoolean();
-            if (!placementStr) {
+            System.out.print("Nouveau placement (true/false) (" + p.getPlacement() + ") : ");
+            String placementStr = scanner.nextLine().trim().toLowerCase();
+            if (!placementStr.isEmpty()) {
                 try {
-                    p.setPlacement(placementStr);
-                } catch (NumberFormatException e) {
+                    boolean newPlacement = "true".equals(placementStr) || "oui".equals(placementStr) || "yes".equals(placementStr);
+                    p.setPlacement(newPlacement);
+                } catch (Exception e) {
                     System.out.println("Valeur invalide, ancienne valeur conservée.");
                 }
             }
@@ -301,9 +367,12 @@ public class MenuClient {
                 String act = scanner.nextLine();
                 if (!act.trim().isEmpty()) pro.setActivite(act);
 
-                System.out.print(" AutoEntrepreneur (" + pro.isAutoEntrepreneur() + ") : ");
-                boolean auto = scanner.nextBoolean();
-                if (auto) pro.setAutoEntrepreneur(auto);
+                System.out.print(" AutoEntrepreneur (true/false) (" + pro.isAutoEntrepreneur() + ") : ");
+                String autoStr = scanner.nextLine().trim().toLowerCase();
+                if (!autoStr.isEmpty()) {
+                    boolean auto = "true".equals(autoStr) || "oui".equals(autoStr) || "yes".equals(autoStr);
+                    pro.setAutoEntrepreneur(auto);
+                }
 
             }
 
