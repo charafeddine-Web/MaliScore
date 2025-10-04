@@ -54,6 +54,7 @@ public class MenuPayment {
                     case 2:
                         consulterEcheancesCredit();
                         break;
+                
                     case 3:
                         consulterEcheancesClient();
                         break;
